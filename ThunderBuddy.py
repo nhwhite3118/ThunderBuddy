@@ -2,8 +2,6 @@ import config
 from urllib.request import urlopen
 import json
 from twilio.rest import TwilioRestClient
-from flask import Flask
-app = Flask(__name__)
 
 # Retrieve Weather Underground Data
 f = urlopen("http://api.wunderground.com/api/" + config.WEATHER_UNDERGROUND_API_KEY + "/forecast/q/KS/Salina.json")
