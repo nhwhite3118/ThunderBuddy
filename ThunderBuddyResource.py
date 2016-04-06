@@ -16,6 +16,8 @@ def subscribe(number):
             return "Please input a valid number"
     except:
             return "Please input a valid number"
+    cur.execute("DELETE FROM user WHERE number="+number)
+    conn.commit()
     city="Austin"
     state="TX"
     sql = "INSERT INTO user(number,city,state) VALUES(%s,%s,%s)"
