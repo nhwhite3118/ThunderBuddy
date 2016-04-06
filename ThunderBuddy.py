@@ -42,8 +42,39 @@ def send_alerts():
         if city+state not in forecasts: #find forecasts only for new cities
             print("Checking forecast for "+city)
             forecasts[city+state] = make_forecast(city,state)
+        #send_email(number+"@vtext.com","Test")
         if forecasts[city+state]: #if there is thunder, message the user
-            client.messages.create(to = number, from_ = config.TWILIO_NUMBER, body = forecasts[city+state])
+            send_email(number+"@vtext.com",forecasts[city+state])
+            #client.messages.create(to = number, from_ = config.TWILIO_NUMBER, body = forecasts[city+state])
+
+
+
+
+def send_email(recipient,body, user="thunderbuddyproject@gmail.com", pwd=config.EMAIL_PASSWORD, subject="ThunderBuddy"):
+    import smtplib
+
+    gmail_user = 'thunderbuddyproject@gmail.com'
+    gmail_pwd = config.EMAIL_PASSWORD
+    FROM = user
+    TO = recipient if type(recipient) is list else [recipient]
+    SUBJECT = subject
+    TEXT = body
+
+    # Prepare actual message
+    message = """\From: %s\nTo: %s\nSubject: %s\n\n%s
+    """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
+    try:
+        server = smtplib.SMTP("smtp.gmail.com", 587)
+        server.ehlo()
+        server.starttls()
+        server.login(gmail_user, gmail_pwd)
+        server.sendmail(FROM, TO, message)
+        server.close()
+        print ('successfully sent the mail')
+    except:
+        print ("failed to send mail")
+
+
 
 send_alerts()
 
