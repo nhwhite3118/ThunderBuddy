@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ThunderBuddy</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
+    <script>
+        $(function() {
+            $("#btn-subscribe").click(function() {
+                var subscribeEndpoint = 'http://localhost:8080/api/subscribe/number/';
+                $.ajax({
+                    url: subscribeEndpoint + $("#inputForm").val(),
+                    type: 'POST',
+                    success: function(response) {
+                        alert(response);
+                    },
+                    error: function(error) {
+                        alert(error);
+                    }
+                });
+            });
+            $("#btn-unsubscribe").click(function() {
+                var unsubscribeEndpoint = 'http://localhost:8080/api/unsubscribe/number/';
+                $.ajax({
+                    url: unsubscribeEndpoint + $("#inputForm").val(),
+                    type: 'POST',
+                    success: function(response) {
+                        alert(response);
+                    },
+                    error: function(error) {
+                        alert(error);
+                    }
+                });
+            });
+        });
+    </script>
+
+    <style>
+        .btn {
+            border-width: 2px;
+            background-color: rgba(0, 0, 0, .0);
+            font-weight: 400;
+            opacity: 0.8;
+            padding: 8px 16px;
+        }
+        .btn-primary {
+            color: #3472F7;
+            border-color: #3472F7;
+        }
+        .btn-center {
+            margin: 0 auto;
+            display: block;
+            margin-top: 13px;
+        }
+        .btn-lg {
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: 400;
+            padding: 9px 60px;
+        }
+        .form-control {
+            background-color: #FFFFFF;
+            border: 1px solid #E3E3E3;
+            border-radius: 4px;
+            box-shadow: none;
+            color: #444444;
+            height: 38px;
+            padding: 6px 16px;
+        }
+        .cd {
+            position: relative;
+            min-height: 1px;
+        }
+        .Absolute-Center {
+            margin: auto;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+        }
+        .Absolute-Center.is-Responsive {
+            width: 50%;
+            height: 50%;
+            min-width: 200px;
+            max-width: 460px;
+            padding: 40px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="Absolute-Center is-Responsive">
+    <h1>Enter a Phone Number</h1>
+    <input id="inputForm" type="text" class="form-control cd">
+    <div id="buttons">
+        <button id="btn-subscribe" class="btn btn-primary btn-lg btn-center">Subscribe</button>
+        <button id="btn-unsubscribe" class="btn btn-primary btn-lg btn-center">Unsubscribe</button>
+    </div>
+
+</div>
+</body>
+
+</html>
