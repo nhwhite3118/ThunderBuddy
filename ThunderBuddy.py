@@ -4,6 +4,7 @@ import json
 from twilio.rest import TwilioRestClient
 import pymysql
 import time
+import smtplib
 
 # We need to keep track of the number of unique cities we ask weatherunderground
 # for. We get 10 API calls/minute, and 500/day, so we need to keep totals
@@ -27,7 +28,7 @@ def make_forecast(city, state):
     for forecastEntry in forecastList:
         fcttext = forecastEntry["fcttext"].lower()
         fcttext_metric = forecastEntry["fcttext_metric"].lower()
-        if "thunder" in forecastEntry or "thunder" in fcttext_metric:
+        if "thunder" in fcttext or "thunder" in fcttext_metric:
             print("Appending to message - thunder coming on " + forecastEntry["title"] + "!")
             message += "Thunder coming on " + forecastEntry["title"] + "!\n"
     f.close()
@@ -45,40 +46,33 @@ def send_alerts():
         if city + state not in forecasts:  # find forecasts only for new cities
             print("Checking forecast for " + city)
             wunderground_this_min += 1
-            if (wunderground_this_min >= 10):  # Only make 10 api calls/min
+            if wunderground_this_min >= 10:  # Only make 10 api calls/min
                 time.sleep(120)
                 wunderground_this_min = 0
             forecasts[city + state] = make_forecast(city, state)
         # send_email(number+"@vtext.com","Test")
         if forecasts[city + state]:  # if there is thunder, message the user
             send_email(number + "@vtext.com", forecasts[city + state])
-            # client.messages.create(to = number, from_ = config.TWILIO_NUMBER, body = forecasts[city+state])
 
 
-def send_email(recipient, body, user="thunderbuddyproject@gmail.com", pwd=config.EMAIL_PASSWORD,
-               subject="ThunderBuddy"):
-    import smtplib
-
+def send_email(recipient, body, subject = "ThunderBuddy"):
     gmail_user = 'thunderbuddyproject@gmail.com'
     gmail_pwd = config.EMAIL_PASSWORD
-    FROM = user
-    TO = recipient if type(recipient) is list else [recipient]
-    SUBJECT = subject
-    TEXT = body
+    to = recipient if type(recipient) is list else [recipient]
 
     # Prepare actual message
     message = """\From: %s\nTo: %s\nSubject: %s\n\n%s
-    """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
+    """ % (gmail_user, ", ".join(to), subject, body)
     try:
         server = smtplib.SMTP("smtp.gmail.com", 587)
         server.ehlo()
         server.starttls()
         server.login(gmail_user, gmail_pwd)
-        server.sendmail(FROM, TO, message)
+        server.sendmail(gmail_user, to, message)
         server.close()
-        print('successfully sent the mail')
+        print('successfully sent email')
     except:
-        print("failed to send mail")
+        print("failed to send email")
 
 
 send_alerts()
