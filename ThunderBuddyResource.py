@@ -70,7 +70,7 @@ def unsubscribe(number):
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host='localhost', port=8081)
 
 cur.close()
 conn.close()

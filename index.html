@@ -9,7 +9,7 @@
     <script>
         $(function () {
             $("#btn-subscribe").click(function () {
-                var subscribeEndpoint = 'http://localhost:5000/api/subscribe/number/';
+                var subscribeEndpoint = 'http://104.236.3.239:5000/api/subscribe/number/';
                 $.ajax({
                     url: subscribeEndpoint + $("#numberInputForm").val() + "/zip/" + $("#zipInputForm").val(),
                     type: 'POST',
@@ -22,7 +22,7 @@
                 });
             });
             $("#btn-unsubscribe").click(function () {
-                var unsubscribeEndpoint = 'http://localhost:5000/api/unsubscribe/number/';
+                var unsubscribeEndpoint = 'http://104.236.3.239:5000/api/unsubscribe/number/';
                 $.ajax({
                     url: unsubscribeEndpoint + $("#numberInputForm").val(),
                     type: 'POST',
