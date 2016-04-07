@@ -2,33 +2,34 @@
 <html>
 <head>
     <title>ThunderBuddy</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 
     <script>
-        $(function() {
-            $("#btn-subscribe").click(function() {
+        $(function () {
+            $("#btn-subscribe").click(function () {
                 var subscribeEndpoint = 'http://localhost:5000/api/subscribe/number/';
                 $.ajax({
                     url: subscribeEndpoint + $("#numberInputForm").val() + "/zip/" + $("#zipInputForm").val(),
                     type: 'POST',
-                    success: function(response) {
+                    success: function (response) {
                         alert(response);
                     },
-                    error: function(error) {
+                    error: function (error) {
                         alert(error);
                     }
                 });
             });
-            $("#btn-unsubscribe").click(function() {
+            $("#btn-unsubscribe").click(function () {
                 var unsubscribeEndpoint = 'http://localhost:5000/api/unsubscribe/number/';
                 $.ajax({
                     url: unsubscribeEndpoint + $("#numberInputForm").val(),
                     type: 'POST',
-                    success: function(response) {
+                    success: function (response) {
                         alert(response);
                     },
-                    error: function(error) {
+                    error: function (error) {
                         alert(error);
                     }
                 });
@@ -44,21 +45,25 @@
             opacity: 0.8;
             padding: 8px 16px;
         }
+
         .btn-primary {
             color: #3472F7;
             border-color: #3472F7;
         }
+
         .btn-center {
             margin: 0 auto;
             display: block;
             margin-top: 13px;
         }
+
         .btn-lg {
             border-radius: 6px;
             font-size: 18px;
             font-weight: 400;
             padding: 9px 60px;
         }
+
         .form-control {
             background-color: #FFFFFF;
             border: 1px solid #E3E3E3;
@@ -68,15 +73,21 @@
             height: 38px;
             padding: 6px 16px;
         }
+
         .cd {
             position: relative;
             min-height: 1px;
         }
+
         .Absolute-Center {
             margin: auto;
             position: absolute;
-            top: 0; left: 0; bottom: 0; right: 0;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
         }
+
         .Absolute-Center.is-Responsive {
             width: 50%;
             height: 50%;

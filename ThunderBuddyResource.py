@@ -2,7 +2,6 @@ import config
 from flask import Flask
 import pymysql
 import zipcode
-from urllib.request import urlopen
 from twilio.rest.lookups import TwilioLookupsClient
 
 app = Flask(__name__)
@@ -35,18 +34,20 @@ def subscribe(number, zip):
     conn.commit()
 
     zipcodeInfo = zipcode.isequal(zip)
-    numberInfo = client.phone_numbers.get(number,include_carrier_info =True)
-    carrier = numberInfo.carrier['name'] 
+    numberInfo = client.phone_numbers.get(number, include_carrier_info=True)
+    carrier = numberInfo.carrier['name']
     print(carrier)
-    #Convert carrier to portal
-    portal=""
+    # Convert carrier to portal
+    portal = ""
     if carrier in carrierPortalLookup:
         portal = carrierPortalLookup[carrier]
     else:
         return "We are sorry, but ThunderBuddy does not support your carrier"
 
     sql = "INSERT INTO user(number,city,state,carrier_portal) VALUES(%s,%s,%s,%s)"
-    v = (str(number), str(zipcodeInfo.city), str(zipcodeInfo.state),str(portal))
+    city = str(zipcodeInfo.city).replace(" ", "_")
+    state = str(zipcodeInfo.state)
+    v = (str(number), city, state, portal)
     print(v)
     cur.execute(sql, v)
     conn.commit()
