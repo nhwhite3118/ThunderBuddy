@@ -2,12 +2,22 @@ import config
 from flask import Flask
 import pymysql
 import zipcode
+from urllib.request import urlopen
+from twilio.rest.lookups import TwilioLookupsClient
 
 app = Flask(__name__)
 
+carrierPortalLookup = {
+    "Verizon Wireless": "vtext.com",
+    "Sprint Spectrum, L.P.": "messaging.sprintpcs.com",
+    "AT&T Wireless": "txt.att.net",
+}
+
+client = TwilioLookupsClient()
 conn = pymysql.connect(host='127.0.0.1', user=config.DB_USER, passwd=config.DB_PASSWORD, db='thunderbuddy')
 cur = conn.cursor()
 cur.execute("SELECT * FROM user")
+client = TwilioLookupsClient()
 for r in cur:
     print(r)
 
@@ -24,9 +34,20 @@ def subscribe(number, zip):
     cur.execute("DELETE FROM user WHERE number=" + number)
     conn.commit()
 
-    sql = "INSERT INTO user(number,city,state) VALUES(%s,%s,%s)"
     zipcodeInfo = zipcode.isequal(zip)
-    v = (str(number), str(zipcodeInfo.city), str(zipcodeInfo.state))
+    numberInfo = client.phone_numbers.get(number,include_carrier_info =True)
+    carrier = numberInfo.carrier['name'] 
+    print(carrier)
+    #Convert carrier to portal
+    portal=""
+    if carrier in carrierPortalLookup:
+        portal = carrierPortalLookup[carrier]
+    else:
+        return "We are sorry, but ThunderBuddy does not support your carrier"
+
+    sql = "INSERT INTO user(number,city,state,carrier_portal) VALUES(%s,%s,%s,%s)"
+    v = (str(number), str(zipcodeInfo.city), str(zipcodeInfo.state),str(portal))
+    print(v)
     cur.execute(sql, v)
     conn.commit()
     return "Subscribed - " + str(number)

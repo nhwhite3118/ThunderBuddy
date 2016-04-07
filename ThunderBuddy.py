@@ -1,7 +1,6 @@
 import config
 from urllib.request import urlopen
 import json
-from twilio.rest import TwilioRestClient
 import pymysql
 import time
 import smtplib
@@ -12,7 +11,6 @@ wunderground_this_day = 0
 # We need to cache cities so that our usage scales with unique cities instead
 # of unique users
 forecasts = {}
-client = TwilioRestClient(config.TWILIO_ACCOUNT_KEY, config.TWILIO_AUTH_KEY)
 conn = pymysql.connect(host='127.0.0.1', user=config.DB_USER, passwd=config.DB_PASSWORD, db='thunderbuddy')
 
 def send_alerts():
