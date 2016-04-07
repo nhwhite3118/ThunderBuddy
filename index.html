@@ -10,7 +10,7 @@
             $("#btn-subscribe").click(function() {
                 var subscribeEndpoint = 'http://localhost:5000/api/subscribe/number/';
                 $.ajax({
-                    url: subscribeEndpoint + $("#inputForm").val(),
+                    url: subscribeEndpoint + $("#numberInputForm").val() + "/zip/" + $("#zipInputForm").val(),
                     type: 'POST',
                     success: function(response) {
                         alert(response);
@@ -23,7 +23,7 @@
             $("#btn-unsubscribe").click(function() {
                 var unsubscribeEndpoint = 'http://localhost:5000/api/unsubscribe/number/';
                 $.ajax({
-                    url: unsubscribeEndpoint + $("#inputForm").val(),
+                    url: unsubscribeEndpoint + $("#numberInputForm").val(),
                     type: 'POST',
                     success: function(response) {
                         alert(response);
@@ -90,7 +90,8 @@
 <body>
 <div class="Absolute-Center is-Responsive">
     <h1>Enter a Phone Number</h1>
-    <input id="inputForm" type="text" class="form-control cd">
+    <input id="numberInputForm" type="text" class="form-control cd" placeholder="Phone number">
+    <input id="zipInputForm" type="text" class="form-control cd" placeholder="Zip code">
     <div id="buttons">
         <button id="btn-subscribe" class="btn btn-primary btn-lg btn-center">Subscribe</button>
         <button id="btn-unsubscribe" class="btn btn-primary btn-lg btn-center">Unsubscribe</button>

@@ -15,6 +15,24 @@ forecasts = {}
 client = TwilioRestClient(config.TWILIO_ACCOUNT_KEY, config.TWILIO_AUTH_KEY)
 conn = pymysql.connect(host='127.0.0.1', user=config.DB_USER, passwd=config.DB_PASSWORD, db='thunderbuddy')
 
+def send_alerts():
+    wunderground_this_min = 0
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM user")
+    for user in cur:
+        number = str(user[0])
+        city = str(user[1]).replace(" ", "_")
+        state = str(user[2])
+        if city + state not in forecasts:  # find forecasts only for new cities
+            print("Checking forecast for " + city)
+            wunderground_this_min += 1
+            if wunderground_this_min >= 10:  # Only make 10 api calls/min
+                time.sleep(120)
+                wunderground_this_min = 0
+            forecasts[city + state] = make_forecast(city, state)
+        # send_email(number+"@vtext.com","Test")
+        if forecasts[city + state]:  # if there is thunder, message the user
+            send_email(number + "@vtext.com", forecasts[city + state]) # TODO lookup
 
 def make_forecast(city, state):
     # Retrieve Weather Underground Data
@@ -33,26 +51,6 @@ def make_forecast(city, state):
             message += "Thunder coming on " + forecastEntry["title"] + "!\n"
     f.close()
     return message
-
-
-def send_alerts():
-    wunderground_this_min = 0
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM user")
-    for user in cur:
-        number = str(user[0])
-        city = str(user[1])
-        state = str(user[2])
-        if city + state not in forecasts:  # find forecasts only for new cities
-            print("Checking forecast for " + city)
-            wunderground_this_min += 1
-            if wunderground_this_min >= 10:  # Only make 10 api calls/min
-                time.sleep(120)
-                wunderground_this_min = 0
-            forecasts[city + state] = make_forecast(city, state)
-        # send_email(number+"@vtext.com","Test")
-        if forecasts[city + state]:  # if there is thunder, message the user
-            send_email(number + "@vtext.com", forecasts[city + state])
 
 
 def send_email(recipient, body, subject = "ThunderBuddy"):

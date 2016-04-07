@@ -1,6 +1,7 @@
 import config
 from flask import Flask
 import pymysql
+import zipcode
 
 app = Flask(__name__)
 
@@ -11,25 +12,28 @@ for r in cur:
     print(r)
 
 
-@app.route("/api/subscribe/number/<number>")
-def subscribe(number):
+# subscribes a user by inserting their number into the database
+@app.route("/api/subscribe/number/<number>/zip/<zip>", methods=["POST"])
+def subscribe(number, zip):
     try:
         if len(str(int(number))) > 15:
             return "Please input a valid number"
     except:
         return "Please input a valid number"
+    # allow users to change their location without duplicating in the bases
     cur.execute("DELETE FROM user WHERE number=" + number)
     conn.commit()
-    city = "Austin"
-    state = "TX"
+
     sql = "INSERT INTO user(number,city,state) VALUES(%s,%s,%s)"
-    v = (str(number), str(city), str(state))
+    zipcodeInfo = zipcode.isequal(zip)
+    v = (str(number), str(zipcodeInfo.city), str(zipcodeInfo.state))
     cur.execute(sql, v)
     conn.commit()
-    return "Hello! - " + str(number)
+    return "Subscribed - " + str(number)
 
 
-@app.route("/api/unsubscribe/number/<number>")
+# unsubscribes a user by removing their number from the database
+@app.route("/api/unsubscribe/number/<number>", methods=["POST"])
 def unsubscribe(number):
     try:
         if len(str(int(number))) > 15:
@@ -39,12 +43,8 @@ def unsubscribe(number):
     print("About to remove " + str(number) + " from user")
     cur.execute("DELETE FROM user WHERE number=" + number)
     conn.commit()
-    print("User now contains: ")
-    cur.execute("SELECT * FROM user")
-    for r in cur:
-        print(r)
 
-    return "Goodbye! - " + str(number)
+    return "Unsubscribed - " + str(number)
 
 
 if __name__ == "__main__":
