@@ -3,11 +3,11 @@ from urllib.request import urlopen
 import json
 from twilio.rest import TwilioRestClient
 import pymysql
+import time
 
 #We need to keep track of the number of unique cities we ask weatherunderground
 #for. We get 10 API calls/minute, and 500/day, so we need to keep totals
-wunderground_calls_this_minute = 0
-wunderground_calls_this_day = 0
+wunderground_this_day = 0
 #We need to cache cities so that our usage scales with unique cities instead
 #of unique users
 forecasts = {}
@@ -33,6 +33,7 @@ def make_forecast(city,state):
     return message
 
 def send_alerts():
+    wunderground_this_min=0
     cur = conn.cursor()
     cur.execute("SELECT * FROM user")
     for user in cur:
@@ -41,6 +42,10 @@ def send_alerts():
         state = str(user[2])
         if city+state not in forecasts: #find forecasts only for new cities
             print("Checking forecast for "+city)
+            wunderground_this_min+=1
+            if(wunderground_this_min>=10):  #Only make 10 api calls/min
+                time.sleep(120)
+                wunderground_this_min=0
             forecasts[city+state] = make_forecast(city,state)
         #send_email(number+"@vtext.com","Test")
         if forecasts[city+state]: #if there is thunder, message the user
