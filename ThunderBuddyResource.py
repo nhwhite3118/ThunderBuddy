@@ -68,6 +68,10 @@ def unsubscribe(number):
 
     return "Unsubscribed - " + str(number)
 
+# debugging helper
+@app.route("/")
+def hello():
+    return "Thunder sucks"
 
 if __name__ == "__main__":
     app.run(host='localhost', port=8081)
