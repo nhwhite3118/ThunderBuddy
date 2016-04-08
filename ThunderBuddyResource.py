@@ -3,6 +3,9 @@ from flask import Flask
 import pymysql
 import zipcode
 from twilio.rest.lookups import TwilioLookupsClient
+from tornado.wsgi import WSGIContainer
+from tornado.httpserver import HTTPServer
+from tornado.ioloop import IOLoop
 
 app = Flask(__name__)
 
@@ -74,7 +77,9 @@ def hello():
     return "Thunder sucks"
 
 if __name__ == "__main__":
-    app.run(host='localhost', port=8081)
+    http_server = HTTPServer(WSGIContainer(app))
+    http_server.listen(8000)
+    IOLoop.instance().start()
 
 cur.close()
 conn.close()
