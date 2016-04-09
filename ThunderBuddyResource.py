@@ -1,5 +1,6 @@
 import config
 from flask import Flask
+import flask 
 import pymysql
 import zipcode
 from twilio.rest.lookups import TwilioLookupsClient
@@ -54,8 +55,10 @@ def subscribe(number, zip):
     print(v)
     cur.execute(sql, v)
     conn.commit()
-    return "Subscribed - " + str(number)
-
+    
+    resp = flask.Response("Subscribed " + str(number))
+    resp.headers["Access-Control-Allow-Origin"] = "*"
+    return resp
 
 # unsubscribes a user by removing their number from the database
 @app.route("/api/unsubscribe/number/<number>", methods=["POST"])
@@ -68,8 +71,10 @@ def unsubscribe(number):
     print("About to remove " + str(number) + " from user")
     cur.execute("DELETE FROM user WHERE number=" + number)
     conn.commit()
-
-    return "Unsubscribed - " + str(number)
+    
+    resp = flask.Response("Unsubscribed " + str(number))
+    resp.headers["Access-Control-Allow-Origin"] = "*"
+    return resp    
 
 # debugging helper
 @app.route("/")
