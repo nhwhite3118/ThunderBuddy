@@ -53,7 +53,6 @@
 
         .btn-center {
             margin: 0 auto;
-            display: block;
             margin-top: 13px;
         }
 
@@ -63,8 +62,7 @@
             font-weight: 400;
             padding: 9px 60px;
         }
-
-        .form-control {
+        .input-form-control {
             background-color: #FFFFFF;
             border: 1px solid #E3E3E3;
             border-radius: 4px;
@@ -72,8 +70,11 @@
             color: #444444;
             height: 38px;
             padding: 6px 16px;
+            font-size: 14px;
+            line-height: 1.42857143;
+            background-image: none;
+                transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
         }
-
         .cd {
             position: relative;
             min-height: 1px;
@@ -92,17 +93,28 @@
             width: 50%;
             height: 50%;
             min-width: 200px;
-            max-width: 460px;
+            max-width: 515px;
             padding: 40px;
         }
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .phone {
+            width: 64%;
+        }
+        .zip {
+            width: 150px
+        }
+
     </style>
 </head>
 
 <body>
 <div class="Absolute-Center is-Responsive">
-    <h1>Enter a Phone Number</h1>
-    <input id="numberInputForm" type="text" class="form-control cd" placeholder="Phone number">
-    <input id="zipInputForm" type="text" class="form-control cd" placeholder="Zip code">
+    <h1 class="header">ThunderBuddy</h1>
+    <input id="numberInputForm" type="text" class="input-form-control cd phone" placeholder="Phone number">
+    <input id="zipInputForm" type="text" class="input-form-control cd zip" placeholder="Zip code">
     <div id="buttons">
         <button id="btn-subscribe" class="btn btn-primary btn-lg btn-center">Subscribe</button>
         <button id="btn-unsubscribe" class="btn btn-primary btn-lg btn-center">Unsubscribe</button>

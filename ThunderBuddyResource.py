@@ -71,7 +71,7 @@ def unsubscribe(number):
     print("About to remove " + str(number) + " from user")
     cur.execute("DELETE FROM user WHERE number=" + number)
     conn.commit()
-    
+
     resp = flask.Response("Unsubscribed " + str(number))
     resp.headers["Access-Control-Allow-Origin"] = "*"
     return resp    
