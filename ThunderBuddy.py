@@ -33,8 +33,6 @@ def send_alerts():
                 wunderground_this_min = 0
             forecasts[city + state] = make_forecast(city, state)
 
-        send_email(number + "@" + portal, "Thunder")
-
         if forecasts[city + state]:  # if there is thunder, message the user
             send_email(number + "@" + portal, forecasts[city + state])
 
