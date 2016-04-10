@@ -1,12 +1,13 @@
 import config
 from flask import Flask
-import flask 
+import flask
 import pymysql
 import zipcode
 from twilio.rest.lookups import TwilioLookupsClient
 from tornado.wsgi import WSGIContainer
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -16,13 +17,13 @@ carrierPortalLookup = {
     "AT&T Wireless": "txt.att.net",
 }
 
+# twilio
 client = TwilioLookupsClient()
+client = TwilioLookupsClient()
+
+# database
 conn = pymysql.connect(host='127.0.0.1', user=config.DB_USER, passwd=config.DB_PASSWORD, db='thunderbuddy')
 cur = conn.cursor()
-cur.execute("SELECT * FROM user")
-client = TwilioLookupsClient()
-for r in cur:
-    print(r)
 
 
 # subscribes a user by inserting their number into the database
@@ -40,7 +41,6 @@ def subscribe(number, zip):
     zipcodeInfo = zipcode.isequal(zip)
     numberInfo = client.phone_numbers.get(number, include_carrier_info=True)
     carrier = numberInfo.carrier['name']
-    print(carrier)
     # Convert carrier to portal
     portal = ""
     if carrier in carrierPortalLookup:
@@ -52,13 +52,14 @@ def subscribe(number, zip):
     city = str(zipcodeInfo.city).replace(" ", "_")
     state = str(zipcodeInfo.state)
     v = (str(number), city, state, portal)
-    print(v)
+    print(str(datetime.now()) + " Adding user - " + carrier + " " + str(v))
     cur.execute(sql, v)
     conn.commit()
-    
-    resp = flask.Response("Subscribed " + str(number))
+
+    resp = flask.Response("Subscribed " + str(number), status=200)
     resp.headers["Access-Control-Allow-Origin"] = "*"
-    return resp
+    return resp,
+
 
 # unsubscribes a user by removing their number from the database
 @app.route("/api/unsubscribe/number/<number>", methods=["POST"])
@@ -68,22 +69,39 @@ def unsubscribe(number):
             return "Please input a valid number"
     except:
         return "Please input a valid number"
-    print("About to remove " + str(number) + " from user")
+
+    print(str(datetime.now()) + " Removing user - " + number)
     cur.execute("DELETE FROM user WHERE number=" + number)
     conn.commit()
 
-    resp = flask.Response("Unsubscribed " + str(number))
+    resp = flask.Response("Unsubscribed " + str(number), status=200)
     resp.headers["Access-Control-Allow-Origin"] = "*"
-    return resp    
+    return resp
 
-# debugging helper
+
+# debugging helpers
 @app.route("/")
 def hello():
-    return "Thunder sucks"
+    resp = flask.Response("Thunder sucks", status=200)
+    resp.headers["Access-Control-Allow-Origin"] = "*"
+    return resp
+
+
+@app.route("/users")
+def users():
+    cur.execute("SELECT * FROM user")
+    users = ""
+    for r in cur:
+        users += str(r)
+    resp = flask.Response(users, status=200)
+    resp.headers["Access-Control-Allow-Origin"] = "*"
+    return resp
+
 
 if __name__ == "__main__":
     http_server = HTTPServer(WSGIContainer(app))
     http_server.listen(8000)
+    print(str(datetime.now()) + " Flask started...")
     IOLoop.instance().start()
 
 cur.close()
