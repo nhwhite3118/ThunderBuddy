@@ -1,126 +1,86 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
+    <meta charset="utf-8"/>
+    <link rel="icon" type="image/png" href="./assets/paper_img/favicon.ico">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
     <title>ThunderBuddy</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
-          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 
-    <script>
-        $(function () {
-            $("#btn-subscribe").click(function () {
-                var subscribeEndpoint = 'http://104.236.3.239:8000/api/subscribe/number/';
-                $.ajax({
-                    url: subscribeEndpoint + $("#numberInputForm").val() + "/zip/" + $("#zipInputForm").val(),
-                    type: 'POST',
-                    success: function (response) {
-                        alert("You are subscribed to ThunderBuddy!");
-                    },
-                    error: function (error) {
-                        alert("An error occured with our servers, please try again later");
-                    }
-                });
-            });
-            $("#btn-unsubscribe").click(function () {
-                var unsubscribeEndpoint = 'http://104.236.3.239:8000/api/unsubscribe/number/';
-                $.ajax({
-                    url: unsubscribeEndpoint + $("#numberInputForm").val(),
-                    type: 'POST',
-                    success: function (response) {
-                        alert("You are unsubscribed from ThunderBuddy.");
-                    },
-                    error: function (error) {
-                        alert("An error occured with our servers, please try again later");
-                    }
-                });
-            });
-        });
-    </script>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport'/>
+    <meta name="viewport" content="width=device-width"/>
 
-    <style>
-        .btn {
-            border-width: 2px;
-            background-color: rgba(0, 0, 0, .0);
-            font-weight: 400;
-            opacity: 0.8;
-            padding: 8px 16px;
-        }
+    <link href="assets/bootstrap3/css/bootstrap.css" rel="stylesheet"/>
+    <link href="./assets/css/ct-paper.css" rel="stylesheet"/>
+    <link href="./assets/css/demo.css" rel="stylesheet"/>
+    <link href="./assets/css/examples.css" rel="stylesheet"/>
 
-        .btn-primary {
-            color: #3472F7;
-            border-color: #3472F7;
-        }
+    <!--     Fonts and icons     -->
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
 
-        .btn-center {
-            margin: 0 auto;
-            margin-top: 13px;
-        }
-
-        .btn-lg {
-            border-radius: 6px;
-            font-size: 18px;
-            font-weight: 400;
-            padding: 9px 60px;
-        }
-        .input-form-control {
-            background-color: #FFFFFF;
-            border: 1px solid #E3E3E3;
-            border-radius: 4px;
-            box-shadow: none;
-            color: #444444;
-            height: 38px;
-            padding: 6px 16px;
-            font-size: 14px;
-            line-height: 1.42857143;
-            background-image: none;
-                transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-        }
-        .cd {
-            position: relative;
-            min-height: 1px;
-        }
-
-        .Absolute-Center {
-            margin: auto;
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
-        }
-
-        .Absolute-Center.is-Responsive {
-            width: 50%;
-            height: 50%;
-            min-width: 200px;
-            max-width: 515px;
-            padding: 40px;
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-        .phone {
-            width: 64%;
-        }
-        .zip {
-            width: 150px
-        }
-
-    </style>
 </head>
-
 <body>
-<div class="Absolute-Center is-Responsive">
-    <h1 class="header">ThunderBuddy</h1>
-    <input id="numberInputForm" type="text" class="input-form-control cd phone" placeholder="Phone number">
-    <input id="zipInputForm" type="text" class="input-form-control cd zip" placeholder="Zip code">
-    <div id="buttons">
-        <button id="btn-subscribe" class="btn btn-primary btn-lg btn-center">Subscribe</button>
-        <button id="btn-unsubscribe" class="btn btn-primary btn-lg btn-center">Unsubscribe</button>
-    </div>
+<nav class="navbar navbar-ct-transparent navbar-fixed-top" role="navigation-demo" id="register-navbar">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-example-2">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand">ThunderBuddy</a>
+        </div>
 
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="navigation-example-2">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="https://github.com/nhwhite3118/ThunderBuddy/" target="_blank" class="btn btn-simple"><img
+                            src="http://github.com/favicon.ico" width="30" height="30"></a>
+                </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-->
+</nav>
+
+<div class="wrapper">
+    <div class="register-background">
+        <div class="filter-black"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-10 col-xs-offset-1 ">
+                    <div class="register-card">
+                        <h3 class="title">Sign Up</h3>
+                        <form class="register-form">
+                            <label>Phone</label>
+                            <input id="numberInputForm" class="form-control" placeholder="Phone">
+
+                            <label>Zip</label>
+                            <input id="zipInputForm" class="form-control" placeholder="Zip">
+                            <button id="btn-subscribe" class="btn btn-danger btn-block">Subscribe</button>
+                        </form>
+                        <div class="forgot">
+                            <button id="btn-unsubscribe" class="btn btn-simple btn-danger">Unsubscribe</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer register-footer text-center">
+            <h6>&copy; 2016, made by Nick White &amp; Daniel Robertson</h6>
+        </div>
+    </div>
 </div>
+
 </body>
+
+<script src="./assets/js/jquery-1.10.2.js" type="text/javascript"></script>
+<script src="./assets/js/jquery-ui-1.10.4.custom.min.js" type="text/javascript"></script>
+<script src="assets/bootstrap3/js/bootstrap.js" type="text/javascript"></script>
+<script src="./assets/js/ct-paper.js"></script>
 
 </html>
