@@ -55,7 +55,7 @@
 }
 
 .register-background {
-  background-image: url("../paper_img/rain.jpeg");
+  background-image: url("../img/rain.jpeg");
   background-position: center center;
   background-size: cover;
   min-height: 100vh;
