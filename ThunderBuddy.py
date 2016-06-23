@@ -27,7 +27,7 @@ def sendAlerts():
         portal = user[3]
         if city + state not in forecasts:
             # find forecasts only for new cities
-            print("Checking forecast for " + city)
+            print("Checking forecast for location - " + city)
             wundergroundThisMinute += 1
             if wundergroundThisMinute >= 10:
                 # Only make 10 api calls/min
@@ -49,11 +49,11 @@ def makeForecast(city, state):
     thunderDays = []
 
     message = ""
-    for forecastEntry in forecastList:
-        fcttext = forecastEntry["fcttext"].lower()
-        fcttextMetric = forecastEntry["fcttext_metric"].lower()
-        if "thunder" in fcttext or "thunder" in fcttextMetric:
-            thunderDays.append(forecastEntry["title"])
+    for index in range(1, 3):        
+        day = forecastList[index]["title"]
+        print("Checking forecast time frame - " + day)
+        if containsThunder(forecastList[index]):
+            thunderDays.append(day)
 
     if len(thunderDays) > 0:
         # build message and replace last comma with 'and'
@@ -61,6 +61,17 @@ def makeForecast(city, state):
 
     f.close()
     return message
+
+
+def containsThunder(forecastEntry):
+    containsThunder = False 
+    fcttext = forecastEntry["fcttext"].lower()
+    fcttextMetric = forecastEntry["fcttext_metric"].lower()
+    if "thunder" in fcttext and "thunder possible" not in fcttext \
+        or "thunder" in fcttextMetric and "thunder possible" not in fcttextMetric:
+        containsThunder = True
+
+    return containsThunder
 
 
 def sendEmailSms(recipient, body):
