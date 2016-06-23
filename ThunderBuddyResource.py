@@ -22,18 +22,28 @@ client = TwilioLookupsClient()
 client = TwilioLookupsClient()
 
 # database
-conn = pymysql.connect(host='127.0.0.1', user=config.DB_USER, passwd=config.DB_PASSWORD, db='thunderbuddy')
-cur = conn.cursor()
+#conn = pymysql.connect(host='127.0.0.1', user=config.DB_USER, passwd=config.DB_PASSWORD, db='thunderbuddy')
+#cur = conn.cursor()
 
 
 # subscribes a user by inserting their number into the database
 @app.route("/api/subscribe/number/<number>/zip/<zip>", methods=["POST"])
 def subscribe(number, zip):
+    conn = pymysql.connect(host='127.0.0.1', user=config.DB_USER, passwd=config.DB_PASSWORD, db='thunderbuddy')
+    cur = conn.cursor()
     try:
         if len(str(int(number))) > 15:
-            return "Please input a valid number"
+            cur.close()
+            conn.close()
+            resp = flask.Response("Please input a valid number", status=200)
+            resp.headers["Access-Control-Allow-Origin"] = "*"
+            return resp 
     except:
-        return "Please input a valid number"
+        cur.close()
+        conn.close()
+        resp = flask.Response("Please input a valid number", status=200)
+        resp.headers["Access-Control-Allow-Origin"] = "*"
+        return resp 
     # allow users to change their location without duplicating in the bases
     cur.execute("DELETE FROM user WHERE number=" + number)
     conn.commit()
@@ -46,8 +56,11 @@ def subscribe(number, zip):
     if carrier in carrierPortalLookup:
         portal = carrierPortalLookup[carrier]
     else:
-        return "We are sorry, but ThunderBuddy does not support your carrier"
-
+        cur.close()
+        conn.close()
+        resp = flask.Response("We are sorry, but ThunderBuddy does not support your carrier", status=200)
+        resp.headers["Access-Control-Allow-Origin"] = "*"
+        return resp
     sql = "INSERT INTO user(number,city,state,carrier_portal) VALUES(%s,%s,%s,%s)"
     city = str(zipcodeInfo.city).replace(" ", "_")
     state = str(zipcodeInfo.state)
@@ -58,17 +71,29 @@ def subscribe(number, zip):
 
     resp = flask.Response("Subscribed " + str(number), status=200)
     resp.headers["Access-Control-Allow-Origin"] = "*"
-    return resp,
+    cur.close()
+    conn.close()
+    return resp
 
 
 # unsubscribes a user by removing their number from the database
 @app.route("/api/unsubscribe/number/<number>", methods=["POST"])
 def unsubscribe(number):
+    conn = pymysql.connect(host='127.0.0.1', user=config.DB_USER, passwd=config.DB_PASSWORD, db='thunderbuddy')
+    cur = conn.cursor()
     try:
         if len(str(int(number))) > 15:
-            return "Please input a valid number"
+            cur.close()
+            conn.close()
+            resp = flask.Response("Please input a valid number", status=200)
+            resp.headers["Access-Control-Allow-Origin"] = "*"
+            return resp
     except:
-        return "Please input a valid number"
+        cur.close()
+        conn.close()
+        resp = flask.Response("Please input a valid number", status=200)
+        resp.headers["Access-Control-Allow-Origin"] = "*"
+        return resp
 
     print(str(datetime.now()) + " Removing user - " + number)
     cur.execute("DELETE FROM user WHERE number=" + number)
@@ -76,6 +101,8 @@ def unsubscribe(number):
 
     resp = flask.Response("Unsubscribed " + str(number), status=200)
     resp.headers["Access-Control-Allow-Origin"] = "*"
+    cur.close()
+    conn.close()
     return resp
 
 
@@ -95,5 +122,5 @@ if __name__ == "__main__":
     print(str(datetime.now()) + " Flask started...")
     IOLoop.instance().start()
 
-cur.close()
-conn.close()
+#cur.close()
+#conn.close()
