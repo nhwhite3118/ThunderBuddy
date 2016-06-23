@@ -87,15 +87,6 @@ def hello():
     return resp
 
 
-@app.route("/users")
-def users():
-    cur.execute("SELECT * FROM user")
-    users = ""
-    for r in cur:
-        users += str(r)
-    resp = flask.Response(users, status=200)
-    resp.headers["Access-Control-Allow-Origin"] = "*"
-    return resp
 
 
 if __name__ == "__main__":
