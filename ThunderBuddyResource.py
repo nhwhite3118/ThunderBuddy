@@ -35,13 +35,13 @@ def subscribe(number, zip):
         if len(str(int(number))) > 15:
             cur.close()
             conn.close()
-            resp = flask.Response("Please input a valid number", status=200)
+            resp = flask.Response("Please input a valid number", status=400)
             resp.headers["Access-Control-Allow-Origin"] = "*"
             return resp 
     except:
         cur.close()
         conn.close()
-        resp = flask.Response("Please input a valid number", status=200)
+        resp = flask.Response("Please input a valid number", status=400)
         resp.headers["Access-Control-Allow-Origin"] = "*"
         return resp 
     # allow users to change their location without duplicating in the bases
@@ -58,7 +58,7 @@ def subscribe(number, zip):
     else:
         cur.close()
         conn.close()
-        resp = flask.Response("We are sorry, but ThunderBuddy does not support your carrier", status=200)
+        resp = flask.Response("We are sorry, but ThunderBuddy does not support your carrier", status=400)
         resp.headers["Access-Control-Allow-Origin"] = "*"
         return resp
     sql = "INSERT INTO user(number,city,state,carrier_portal) VALUES(%s,%s,%s,%s)"
@@ -85,13 +85,13 @@ def unsubscribe(number):
         if len(str(int(number))) > 15:
             cur.close()
             conn.close()
-            resp = flask.Response("Please input a valid number", status=200)
+            resp = flask.Response("Please input a valid number", status=400)
             resp.headers["Access-Control-Allow-Origin"] = "*"
             return resp
     except:
         cur.close()
         conn.close()
-        resp = flask.Response("Please input a valid number", status=200)
+        resp = flask.Response("Please input a valid number", status=400)
         resp.headers["Access-Control-Allow-Origin"] = "*"
         return resp
 
